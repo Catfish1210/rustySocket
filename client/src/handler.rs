@@ -21,6 +21,43 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
         KeyCode::Left => {
             app.decrement_counter();
         }
+
+        ////
+        // Connect
+        KeyCode::Enter => {
+            if app.is_connect_selected {
+                //app.AttemptConnection ***TODO fetch name aw
+            }
+        }
+        
+        KeyCode::Up => {
+            if app.is_connect_selected{
+                app.is_connect_selected = false;
+            } else if app.selected_color > 0 {
+                app.selected_color -= 1;
+            }
+        }
+
+        KeyCode::Down => {
+           if !app.is_connect_selected && app.selected_color < 5 {
+               app.selected_color += 1;
+           } else {
+               app.is_connect_selected = true;
+           }
+        }
+
+        KeyCode::Char(c) if !app.is_connect_selected => {
+            app.username.push(c);
+        }
+        KeyCode::Backspace if !app.is_connect_selected => {
+            app.username.pop();
+        }
+        ////
+
+
+
+
+
         // Other handlers you could add here.
         _ => {}
     }

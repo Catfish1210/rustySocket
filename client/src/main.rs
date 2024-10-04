@@ -31,6 +31,7 @@ async fn main() -> AppResult<()> {
     while app.running {
         // Render the user interface.
         tui.draw(&mut app)?;
+        app.update_blink(); // set to 500ms HC
         // Handle events.
         match tui.events.next().await? {
             Event::Tick => app.tick(),
