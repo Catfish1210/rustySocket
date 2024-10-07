@@ -15,6 +15,16 @@ pub fn render(app: &mut App, frame: &mut Frame) {
     // - https://docs.rs/ratatui/latest/ratatui/widgets/index.html
     // - https://github.com/ratatui/ratatui/tree/master/examples
     //
+    let total_width = frame.area().width;
+    let predefined_width = 40;
+    let horizontal_chunks = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([
+            Constraint::Percentage((100 - (predefined_width * 100 / total_width)) / 2),
+            Constraint::Length(predefined_width),
+            Constraint::Percentage((100 - (predefined_width * 100 / total_width)) / 2),
+        ])
+        .split(frame.area());
 
     let chunks = Layout::default()
         .direction(Direction::Vertical)
@@ -27,7 +37,7 @@ pub fn render(app: &mut App, frame: &mut Frame) {
             ]
             .as_ref(),
             )
-            .split(frame.area());
+            .split(horizontal_chunks[1]);
     // Username input
     let input_field = if app.show_cursor {
         format!("Username: {}_", app.username)
@@ -48,16 +58,6 @@ pub fn render(app: &mut App, frame: &mut Frame) {
         chunks[0],
     );
 
-    // Color selector
-    //let colors = vec![
-    //    ("Red", Color::Red),
-    //    ("Green", Color::Green),
-    //    ("Blue", Color::Blue),
-    //    ("Cyan", Color::Cyan),
-    //    ("Magenta", Color::Magenta),
-    //    ("Yellow", Color::Yellow),
-    //];
-    
     let items: Vec<ListItem> = app.colors
         .iter()
         .enumerate()
