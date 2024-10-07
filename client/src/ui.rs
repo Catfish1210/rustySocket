@@ -6,7 +6,7 @@ use ratatui::{
     Frame,
 };
 
-use crate::app::App;
+use crate::app::{App, AppSection};
 
 /// Renders the user interface widgets.
 pub fn render(app: &mut App, frame: &mut Frame) {
@@ -38,11 +38,31 @@ pub fn render(app: &mut App, frame: &mut Frame) {
             .as_ref(),
             )
             .split(horizontal_chunks[1]);
+
+    // Borderstyles for sections
+    let username_border_style = if app.current_section == AppSection::Username {
+        Style::default().fg(Color::Yellow)
+    } else {
+        Style::default().fg(Color::White)
+    };
+
+    let color_picker_border_style = if app.current_section == AppSection::ColorPicker {
+        Style::default().fg(Color::Yellow)
+    } else {
+        Style::default().fg(Color::White)
+    };
+
+    let connect_button_border_style = if app.current_section == AppSection::ConnectButton {
+        Style::default().fg(Color::Yellow)
+    } else {
+        Style::default().fg(Color::White)
+    };
+
     // Username input
     let input_field = if app.show_cursor {
-        format!("Username: {}_", app.username)
+        format!(" {}_", app.username)
     } else {
-        format!("Username: {}", app.username)
+        format!(" {}", app.username)
     };
 
     frame.render_widget(
@@ -51,7 +71,8 @@ pub fn render(app: &mut App, frame: &mut Frame) {
                 Block::default()
                     .borders(Borders::ALL)
                     .title("Username")
-                    .border_type(BorderType::Rounded),
+                    .border_type(BorderType::Rounded)
+                    .border_style(username_border_style),
             )
             .style(Style::default().fg(Color::Cyan).bg(Color::Black))
             .alignment(Alignment::Left),
@@ -85,7 +106,8 @@ pub fn render(app: &mut App, frame: &mut Frame) {
             Block::default()
                 .borders(Borders::ALL)
                 .title("Select Color")
-                .border_type(BorderType::Rounded),
+                .border_type(BorderType::Rounded)
+                .border_style(color_picker_border_style),
          )
         .style(Style::default().fg(Color::White));
     frame.render_widget(color_list, chunks[1]);
@@ -101,7 +123,8 @@ pub fn render(app: &mut App, frame: &mut Frame) {
         .block(
             Block::default()
                 .borders(Borders::ALL)
-                .border_type(BorderType::Rounded),
+                .border_type(BorderType::Rounded)
+                .border_style(connect_button_border_style),
         )
         .style(connect_style)
         .alignment(Alignment::Center);

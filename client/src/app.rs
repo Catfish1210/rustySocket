@@ -6,12 +6,17 @@ use crossterm::event::KeyCode;
 /// Application result type.
 pub type AppResult<T> = std::result::Result<T, Box<dyn error::Error>>;
 
+#[derive(Debug, PartialEq, Eq)]
+pub enum AppSection {
+    Username,
+    ColorPicker,
+    ConnectButton,
+}
+
 /// Application.
 #[derive(Debug)]
 pub struct App {
-    /// Is the application running?
     pub running: bool,
-    /// counter
     pub counter: u8,
     pub username: String,
     pub show_cursor: bool,
@@ -19,6 +24,7 @@ pub struct App {
     pub is_connect_selected: bool,
     pub last_blink: Instant,
     pub colors: Vec<(&'static str, Color)>,
+    pub current_section: AppSection,
 }
 
 impl Default for App {
@@ -39,6 +45,7 @@ impl Default for App {
                 ("Magenta", Color::Magenta),
                 ("Yellow", Color::Yellow),
             ],
+            current_section: AppSection::Username,
         }
     }
 }
@@ -52,10 +59,16 @@ impl App {
     
     // Blink update
     pub fn update_blink(&mut self) {
-        if self.last_blink.elapsed() >= Duration::from_millis(500) {
-            self.show_cursor = !self.show_cursor; // Visibility
-            self.last_blink = Instant::now();
+
+        if self.current_section == AppSection::Username {
+            if self.last_blink.elapsed() >= Duration::from_millis(500) {
+                self.show_cursor = !self.show_cursor; // Visibility
+                self.last_blink = Instant::now();
+            }
+        } else {
+            self.show_cursor = false;
         }
+
     }
     
 
