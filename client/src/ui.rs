@@ -65,6 +65,7 @@ pub fn render(app: &mut App, frame: &mut Frame) {
         format!(" {}", app.username)
     };
 
+    let username_color = app.colors[app.selected_color].1;
     frame.render_widget(
         Paragraph::new(input_field)
             .block(
@@ -74,7 +75,7 @@ pub fn render(app: &mut App, frame: &mut Frame) {
                     .border_type(BorderType::Rounded)
                     .border_style(username_border_style),
             )
-            .style(Style::default().fg(Color::Cyan).bg(Color::Black))
+            .style(Style::default().fg(username_color))
             .alignment(Alignment::Left),
         chunks[0],
     );
@@ -84,20 +85,16 @@ pub fn render(app: &mut App, frame: &mut Frame) {
         .enumerate()
         .map(|(i, (label, color))| {
             let sym = if i == app.selected_color {
-                "x" // Chosen
+                "[ x ]" // Chosen
             } else {
-                " " // Not chosen
+                "[   ]" // Not chosen
             };
             ListItem::new(Line::from(vec![
                     Span::styled(sym, Style::default().fg(Color::White)),
                     Span::raw(" "),
                     Span::styled(label.to_string(), Style::default().fg(*color)),
             ]))
-            //ListItem::new(Text::from(Line::from(vec![
-            //    sym.into(),
-            //    format!(" {}", label).into(),
-            //])))
-            //.style(Style::default().fg(*color))
+
         })
         .collect();
     
@@ -116,7 +113,7 @@ pub fn render(app: &mut App, frame: &mut Frame) {
     let connect_style = if app.is_connect_selected {
         Style::default().fg(Color::Black).bg(Color::Green).add_modifier(Modifier::BOLD)
     } else {
-        Style::default().fg(Color::White).bg(Color::Black)
+        Style::default().fg(Color::White)
     };
     
     let connect_button = Paragraph::new(Text::from("Connect"))

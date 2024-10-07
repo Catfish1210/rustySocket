@@ -16,6 +16,10 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
             KeyCode::Char(c) => {
                 app.username.push(c);
             }
+            KeyCode::Right => {
+                app.current_section = AppSection::ColorPicker;
+            }
+            
             _ => {}
         },
         // Color section
@@ -36,6 +40,10 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
             KeyCode::Left => {
                 app.current_section = AppSection::Username;
             }
+            KeyCode::Right => {
+                app.current_section = AppSection::ConnectButton;
+            }
+            
             _ => {}
         },
 
@@ -49,26 +57,7 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
             }
             _ => {}
         },
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     match key_event.code {
