@@ -1,7 +1,7 @@
 use std::error;
 use std::time::{Duration, Instant};
 use ratatui::style::Color;
-use crossterm::event::KeyCode;
+// use crossterm::event::KeyCode;
 
 /// Application result type.
 pub type AppResult<T> = std::result::Result<T, Box<dyn error::Error>>;
@@ -33,7 +33,6 @@ impl Message {
 #[derive(Debug)]
 pub struct App {
     pub running: bool,
-    pub counter: u8,
     pub username: String,
     pub show_cursor: bool,
     pub selected_color: usize,
@@ -50,7 +49,6 @@ impl Default for App {
     fn default() -> Self {
         Self {
             running: true,
-            counter: 0,
             username: String::new(),
             show_cursor: true,
             selected_color: 0,
@@ -77,12 +75,11 @@ impl Default for App {
 }
 
 impl App {
-    
     /// Constructs a new instance of [`App`].
     pub fn new() -> Self {
         Self::default()
     }
-    
+
     // Blink update
     pub fn update_blink(&mut self) {
         if self.current_section == AppSection::Username {
@@ -93,7 +90,6 @@ impl App {
         } else {
             self.show_cursor = false;
         }
-
     }
     
     /// Handles the tick event of the terminal.
@@ -104,15 +100,4 @@ impl App {
         self.running = false;
     }
 
-    pub fn increment_counter(&mut self) {
-        if let Some(res) = self.counter.checked_add(1) {
-            self.counter = res;
-        }
-    }
-
-    pub fn decrement_counter(&mut self) {
-        if let Some(res) = self.counter.checked_sub(1) {
-            self.counter = res;
-        }
-    }
 }
