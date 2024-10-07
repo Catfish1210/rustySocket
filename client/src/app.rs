@@ -12,7 +12,23 @@ pub enum AppSection {
     ColorPicker,
     ConnectButton,
 }
+#[derive(Debug, PartialEq, Eq)]
+pub enum AppScreen {
+    Join,
+    Chat,
+    // More screens here
+}
+#[derive(Debug)]
+pub struct Message {
+    pub from_user: String,
+    pub content: String,
+}
 
+impl Message {
+    pub fn new(from_user: String, content: String) -> Self {
+        Self { from_user, content }
+    }
+}
 /// Application.
 #[derive(Debug)]
 pub struct App {
@@ -25,6 +41,9 @@ pub struct App {
     pub last_blink: Instant,
     pub colors: Vec<(&'static str, Color)>,
     pub current_section: AppSection,
+    pub current_screen: AppScreen,
+    pub messages: Vec<Message>,
+    pub input: String,
 }
 
 impl Default for App {
@@ -46,6 +65,13 @@ impl Default for App {
                 ("Yellow", Color::Yellow),
             ],
             current_section: AppSection::Username,
+            current_screen: AppScreen::Join,
+            messages: vec![
+                Message::new("Alpha".to_string(), "Hello1".to_string()),
+                Message::new("Bravo".to_string(), "Hello2".to_string()),
+                Message::new("Charlie".to_string(), "Hello3".to_string()),
+            ],
+            input: String::new(),
         }
     }
 }
@@ -59,10 +85,9 @@ impl App {
     
     // Blink update
     pub fn update_blink(&mut self) {
-
         if self.current_section == AppSection::Username {
             if self.last_blink.elapsed() >= Duration::from_millis(500) {
-                self.show_cursor = !self.show_cursor; // Visibility
+                self.show_cursor = !self.show_cursor;
                 self.last_blink = Instant::now();
             }
         } else {
@@ -71,8 +96,6 @@ impl App {
 
     }
     
-
-
     /// Handles the tick event of the terminal.
     pub fn tick(&self) {}
 
