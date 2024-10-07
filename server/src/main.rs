@@ -36,14 +36,19 @@ fn main() {
     
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
     for stream in listener.incoming() {
-        match stream {
-            Ok(stream) => {
-                handle_client(stream);
-                println!("New TCP connection estabished!");
-            }
-            Err(e) => {
-                eprintln!("Failed to establish new connection: {}", e);
-            }
-        }
+        let stream = stream.unwrap();
+
+        thread::spawn(|| {
+            handle_client(stream);
+        });
+        // match stream {
+        //     Ok(stream) => {
+        //         handle_client(stream);
+        //         println!("New TCP connection estabished!");
+        //     }
+        //     Err(e) => {
+        //         eprintln!("Failed to establish new connection: {}", e);
+        //     }
+        // }
     }
 }
